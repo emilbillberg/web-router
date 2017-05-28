@@ -1,21 +1,24 @@
-# \<web-router\>
+# web-router
 
-A simple and opinionated client side router
+A simple and opinionated client side router built with web components.
 
-## Install the Polymer-CLI
+## Development
+1. Download and install [NodeJS](https://nodejs.org).
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+2. Clone the source code from Github.
 
-## Viewing Your Element
+  ```sh
+  git clone git@github.com:emilbillberg/web-router.git
+  ```
 
-```
-$ polymer serve
-```
+3. Start local server.
 
-## Running Tests
+  ```sh
+  npm run dev
+  ```
 
-```
-$ polymer test
-```
+## Tests
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+  ```sh
+  npm test
+  ```
