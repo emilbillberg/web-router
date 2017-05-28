@@ -23,7 +23,6 @@
   <script>
 
     suite('web-router', () => {
-
       let element;
       setup(() => {
         element = fixture('basic');
@@ -39,14 +38,14 @@
       });
 
       test('add visible attribute', () => {
-        element.addVisibleAttribute(two);
-        expect(two.hasAttribute('visible')).to.be.equal(true);
+        element.addVisibleAttribute(window.two);
+        expect(window.two.hasAttribute('visible')).to.be.equal(true);
       });
 
       test('remove visible attribute', () => {
-        two.setAttribute('visible', '');
-        element.removeVisibleAttribute(two);
-        expect(two.hasAttribute('visible')).to.be.equal(false);
+        window.two.setAttribute('visible', '');
+        element.removeVisibleAttribute(window.two);
+        expect(window.two.hasAttribute('visible')).to.be.equal(false);
       });
 
       test('query string to object', () => {
@@ -55,7 +54,6 @@
         expect(queryObject.firstname).to.be.equal('björn');
         expect(queryObject.lastname).to.be.equal('borg');
       });
-
     });
 
   </script>
