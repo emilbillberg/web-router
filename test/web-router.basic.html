@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>web-router test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../web-router.html">
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <web-router>
+        <div id="one" pattern="^/$"></div>
+        <div id="two" pattern="^/two$"></div>
+        <div id="three" pattern="^/three$"></div>
+      </web-router>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    suite('web-router', () => {
+
+      let element;
+      setup(() => {
+        element = fixture('basic');
+      });
+
+      test('has correct element name', () => {
+        expect(element.constructor.is).to.be.equal('web-router');
+      });
+
+      test('find child', () => {
+        const child = element.findChild('/two');
+        expect(child.id).to.be.equal('two');
+      });
+
+      test('add visible attribute', () => {
+        element.addVisibleAttribute(two);
+        expect(two.hasAttribute('visible')).to.be.equal(true);
+      });
+
+      test('remove visible attribute', () => {
+        two.setAttribute('visible', '');
+        element.removeVisibleAttribute(two);
+        expect(two.hasAttribute('visible')).to.be.equal(false);
+      });
+
+      test('query string to object', () => {
+        const queryString = window.decodeURIComponent('firstname=björn&lastname=borg');
+        const queryObject = element.queryStringToObject(queryString);
+        expect(queryObject.firstname).to.be.equal('björn');
+        expect(queryObject.lastname).to.be.equal('borg');
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>

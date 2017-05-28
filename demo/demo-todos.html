@@ -1,0 +1,84 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../web-subscriber.html">
+
+<dom-module id="demo-todos">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1 {
+        margin: 1.6rem 0;
+        padding: 0;
+        font-size: 2.4rem;
+        border-bottom: 1px solid #000;
+        align-self: flex-start;
+      }
+
+      form {
+        margin-bottom: 1.6rem;
+      }
+
+      input[type="text"] {
+        padding: .8rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .todo-item {
+        display: flex;
+        margin-bottom: .8rem;
+        padding: .8rem;
+      }
+
+      .todo-item:nth-child(odd) {
+        background-color: #efefef;
+      }
+
+    </style>
+
+    <h1>Todos</h1>
+    <form on-submit="submitHandler">
+      <input id="text" type="text" maxlength="50" placeholder="Add todo..." autocomplete="off">
+    </form>
+    <dom-repeat items="[[state.todos]]" as="item">
+      <template>
+        <div class="todo-item">
+          <div class="todo-text">[[item.text]]</div>
+        </div>
+      </template>
+    </dom-repeat>
+
+  </template>
+
+  <script>
+
+    class DemoTodos extends WebSubscriber(Polymer.Element) {
+
+      static get is() {
+        return 'demo-todos';
+      }
+
+      submitHandler(event) {
+        event.preventDefault();
+        const text = this.$.text.value;
+        const completed = false;
+        const detail = { type: 'TODO_ADD', data: { text, completed } };
+        const customEvent = new CustomEvent('change-state', { detail });
+        window.dispatchEvent(customEvent);
+        this.$.text.value = '';
+      }
+
+    }
+
+    window.customElements.define(DemoTodos.is, DemoTodos);
+
+  </script>
+
+</dom-module>

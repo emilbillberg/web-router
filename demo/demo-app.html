@@ -1,0 +1,98 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../web-router.html">
+<link rel="import" href="../web-reducer.html">
+
+<dom-module id="demo-app">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        display: flex;
+        background-color: cadetblue;
+      }
+
+      web-router {
+        display: block;
+        padding: .8rem;
+      }
+
+      a {
+        color: #fff;
+        padding: 1.6rem .8rem;
+        font-size: 1.6rem;
+      }
+
+    </style>
+
+    <header>
+      <a href="/components/web-router/demo/">Todos</a>
+      <a href="/components/web-router/demo/random/">Random</a>
+      <a href="/components/web-router/demo/state/">State</a>
+    </header>
+
+    <web-router>
+      <demo-todos pattern="^/components/web-router/demo/$" import="demo/demo-todos.html"></demo-todos>
+      <demo-random pattern="^/components/web-router/demo/random/$" import="demo/demo-random.html"></demo-random>
+      <demo-state pattern="^/components/web-router/demo/state/$" import="demo/demo-state.html"></demo-state>
+    </web-router>
+
+  </template>
+
+  <script>
+
+    class DemoApp extends WebReducer(Polymer.Element) {
+
+      static get is() {
+        return 'demo-app';
+      }
+
+      constructor() {
+        super();
+        this.setInitialState({
+          todos: [
+            { text: 'Buy groceries', completed: true },
+            { text: 'Buy a car', completed: false },
+          ],
+          random: Math.random(),
+        });
+      }
+
+      reduceHandler(state, type, data) {
+        return Object.assign({}, state, {
+          todos: this.todosReducer(state.todos, type, data),
+          random: this.randomReducer(state.random, type, data),
+        });
+      }
+
+      todosReducer(state, type, data) {
+        switch (type) {
+        case 'TODO_ADD':
+          return state.concat(data);
+        default:
+          return state;
+        }
+      }
+
+      randomReducer(state, type, data) {
+        switch (type) {
+        case 'RANDOM_NUMBER':
+          return data;
+        default:
+          return state;
+        }
+      }
+
+    }
+
+    window.customElements.define(DemoApp.is, DemoApp);
+
+  </script>
+
+</dom-module>

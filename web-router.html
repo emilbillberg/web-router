@@ -1,0 +1,229 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/utils/import-href.html">
+
+<dom-module id="web-router">
+
+  <template>
+
+    <style>
+
+      :host > ::slotted(:not([visible])) {
+        display: none !important;
+      }
+
+    </style>
+
+    <slot></slot>
+
+  </template>
+
+  <script>
+    /**
+     * `web-router`
+     * A simple and opinionated client side router
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class WebRouter extends Polymer.Element {
+
+      constructor() {
+        super();
+        this.currentChild = null;
+        this.popStateEventHandler = this.popStateEvent.bind(this);
+        this.clickEventHandler = this.clickEvent.bind(this);
+        this.locationChangeEventHandler = this.locationChangeEvent.bind(this);
+      }
+
+      static get is() {
+        return 'web-router';
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('click', this.clickEventHandler, false);
+        window.addEventListener('popstate', this.popStateEventHandler, false);
+        window.addEventListener('location-change', this.locationChangeEventHandler, false);
+        this.locationChange();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('click', this.clickEventHandler, false);
+        window.removeEventListener('popstate', this.popStateEventHandler);
+        window.removeEventListener('location-change', this.locationChangeEventHandler);
+      }
+
+      clickEvent(event) {
+        const eventPath = event.composedPath();
+        let anchor = null;
+        for (let i = 0; i < eventPath.length; i++) {
+          let element = eventPath[i];
+          if (element.tagName === `A` && element.href) {
+            anchor = element;
+            break;
+          }
+        }
+
+        if (!anchor) {
+          return;
+        }
+
+        if ((anchor.target === `_blank`) ||
+          (anchor.target === `_top`) ||
+          (anchor.target === `_parent`)) {
+          return;
+        }
+
+        const url = new URL(anchor.href);
+        if ((url.protocol !== `http:`) && (url.protocol !== `https:`)) {
+          return;
+        }
+
+        event.preventDefault();
+        const replace = anchor.hasAttribute(`replace`);
+        this.go(anchor.href, replace);
+      }
+
+      popStateEvent() {
+        this.locationChange();
+      }
+
+      locationChangeEvent(event) {
+        const detail = event.detail;
+        const replace = detail.replace;
+        const pathname = detail.pathname;
+        this.go(pathname, replace);
+      }
+
+      go(pathname, replace) {
+        this.beforeRouteExit(this.currentChild).then(() => {
+          if (replace) {
+            window.history.replaceState(null, ``, pathname);
+            this.locationChange();
+          } else {
+            window.history.pushState(null, ``, pathname);
+            this.locationChange();
+          }
+        });
+      }
+
+      locationChange() {
+        const pathname = window.decodeURIComponent(window.location.pathname);
+        const child = this.findChild(pathname);
+        if (this.currentChild !== child) {
+          // TODO: add animation with web animation api
+          // enter animation on child -> can be null
+          // exit animation on currentChild -> can be null
+          // probably do not want an animation on initial load
+          // only when type is replace and push
+          // --------------------------------------------
+          // const enterRoutePromise = this.enterRouteAnimation(child);
+          // const exitRoutePromise = this.exitRouteAnimation(this.currentChild);
+          // Promise.all([enterRoutePromise, exitRoutePromise]).then(values => {
+          //     console.log('animation complete');
+          // });
+          requestAnimationFrame(() => {
+            this.removeVisibleAttribute(this.currentChild);
+            this.dispatchRouteChangeEvent();
+            this.addVisibleAttribute(child);
+            this.currentChild = child;
+            this.lazyLoad(this.currentChild);
+          });
+        }
+      }
+
+      beforeRouteExit(child) {
+        if ((child) && (typeof child.beforeRouteExit === 'function')) {
+          return child.beforeRouteExit();
+        } else {
+          return Promise.resolve();
+        }
+      }
+
+      dispatchRouteChangeEvent() {
+        const pathname = window.decodeURIComponent(window.location.pathname);
+        const pathnames = pathname.split('/').filter(path => path !== '');
+        const hash = window.decodeURIComponent(window.location.hash.substring(1));
+        const queryString = window.decodeURIComponent(window.location.search.substring(1));
+        const queryObject = this.queryStringToObject(queryString);
+        const url = new URL(pathname, `${window.location.protocol}${window.location.host}`);
+        const event = new CustomEvent('change-state', {
+          detail: {
+            type: '__ROUTE_CHANGED',
+            data: { pathname, pathnames, hash, queryString, queryObject, url },
+          },
+        });
+        window.dispatchEvent(event);
+      }
+
+      // enterRouteAnimation(child) {
+      //     if ((child) && (typeof child.enterRouteAnimation === 'function')) {
+      //         return child.enterRouteAnimation().finished;
+      //     } else {
+      //         return Promise.resolve();
+      //     }
+      // }
+
+      // exitRouteAnimation(child) {
+      //     if ((child) && (typeof child.exitRouteAnimation === 'function')) {
+      //         return child.exitRouteAnimation().finished;
+      //     } else {
+      //         return Promise.resolve();
+      //     }
+      // }
+
+      lazyLoad(child) {
+        if (child) {
+          const importHref = child.getAttribute('import');
+          if (importHref) {
+            Polymer.importHref(this.resolveUrl(importHref), null, null, true);
+          }
+        }
+      }
+
+      findChild(pathname) {
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          const pattern = child.getAttribute('pattern');
+          const regex = new RegExp(pattern);
+          if (regex.test(pathname)) {
+            return child;
+          }
+        }
+        return null;
+      }
+
+      addVisibleAttribute(child) {
+        if (child) {
+          child.setAttribute('visible', '');
+        }
+      }
+
+      removeVisibleAttribute(child) {
+        if (child) {
+          child.removeAttribute('visible');
+        }
+      }
+
+      queryStringToObject(queryString) {
+        let queryObject = {};
+        const decodedQueryString = window.decodeURIComponent(queryString);
+        decodedQueryString.split(`&`).forEach((q) => {
+          const parameter = q.split(`=`);
+          if (parameter.length === 2) {
+            const key = window.decodeURIComponent(parameter[0]);
+            const value = window.decodeURIComponent(parameter[1]);
+            queryObject[key] = value;
+          }
+        });
+        return queryObject;
+      }
+
+    }
+
+    window.customElements.define(WebRouter.is, WebRouter);
+
+  </script>
+
+</dom-module>

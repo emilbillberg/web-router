@@ -1,0 +1,25 @@
+{
+  "name": "web-router",
+  "description": "A simple and opinionated client side router built with web components",
+  "main": "web-router.html",
+  "ignore": [
+    "bower_components",
+    "demo",
+    "test",
+    ".editorconfig",
+    ".eslintrc",
+    "index.html",
+    "polymer.json"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}

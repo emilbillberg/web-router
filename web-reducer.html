@@ -1,0 +1,60 @@
+<script>
+
+  /* @polymerBehavior */
+  const WebReducer = (superClass) => {
+    return class extends superClass {
+
+      static get properties() {
+        return {
+          state: {
+            type: Object,
+          },
+        };
+      }
+
+      constructor() {
+        super();
+        this.changeStateHandler = this.changeStateEvent.bind(this);
+        this.getStateHandler = this.getStateEvent.bind(this);
+        window.addEventListener('change-state', this.changeStateHandler, false);
+        window.addEventListener('get-state', this.getStateHandler, false);
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('change-state', this.changeStateListener);
+        window.removeEventListener('get-state', this.getStateListener);
+      }
+
+      setInitialState(state) {
+        if (this.state === undefined) {
+          this.state = state;
+        } else {
+          console.error('Cannot set initial state multiple times');
+        }
+      }
+
+      getStateEvent(event) {
+        event.detail.state = this.state;
+      }
+
+      changeStateEvent(event) {
+        if (typeof this.reduceHandler === 'function') {
+          const detail = event.detail;
+          const type = detail.type;
+          const data = detail.data;
+          if (type === '__ROUTE_CHANGED') {
+            this.state = Object.assign({}, this.state, { router: data });
+          } else {
+            this.state = this.reduceHandler(this.state, type, data);
+          }
+          const customEvent = new CustomEvent('state-changed', { detail: { state: this.state } });
+          window.dispatchEvent(customEvent);
+        } else {
+          console.error('Must implement reduce handler function!');
+        }
+      }
+
+    };
+  };
+
+</script>

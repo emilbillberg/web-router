@@ -1,0 +1,64 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../web-subscriber.html">
+
+<dom-module id="demo-random">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1 {
+        margin: 1.6rem 0;
+        padding: 0;
+        font-size: 2.4rem;
+        border-bottom: 1px solid #000;
+        align-self: flex-start;
+      }
+
+      .random {
+        margin-bottom: 1.6rem;
+      }
+
+      button {
+        margin: 0;
+        padding: .8rem;
+        background-color: cadetblue;
+        max-width: 16rem;
+        border: 0;
+        color: #fff;
+      }
+
+    </style>
+
+    <h1>Random</h1>
+    <div class="random">[[state.random]]</div>
+    <button on-click="clickHandler">Generate random number</button>
+
+  </template>
+
+  <script>
+
+    class DemoRandom extends WebSubscriber(Polymer.Element) {
+
+      static get is() {
+        return 'demo-random';
+      }
+
+      clickHandler() {
+        const detail = { type: 'RANDOM_NUMBER', data: Math.random() };
+        const event = new CustomEvent('change-state', { detail });
+        window.dispatchEvent(event);
+      }
+
+    }
+
+    window.customElements.define(DemoRandom.is, DemoRandom);
+
+  </script>
+
+</dom-module>

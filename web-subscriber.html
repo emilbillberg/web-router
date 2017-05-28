@@ -1,0 +1,43 @@
+<script>
+
+  /* @polymerBehavior */
+  const WebSubscriber = (superClass) => {
+    return class extends superClass {
+
+      static get properties() {
+        return {
+          state: {
+            type: Object,
+          },
+          visible: {
+            type: Boolean,
+            observer: 'observerVisible',
+          },
+        };
+      }
+
+      constructor() {
+        super();
+        this.stateChangeListener = this.stateChange.bind(this);
+      }
+
+      observerVisible(visible) {
+        if (visible) {
+          const event = new CustomEvent('get-state', { detail: {} });
+          window.dispatchEvent(event);
+          this.stateChange(event);
+          window.addEventListener('state-changed', this.stateChangeListener, false);
+        } else {
+          window.removeEventListener('state-changed', this.stateChangeListener, false);
+        }
+      }
+
+      stateChange(event) {
+        const state = event.detail.state;
+        this.setProperties({ state });
+      }
+
+    };
+  };
+
+</script>
