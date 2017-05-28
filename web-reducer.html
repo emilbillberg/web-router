@@ -41,7 +41,7 @@
         const detail = event.detail;
         const type = detail.type;
         const data = detail.data;
-        if (type === '__ROUTE_CHANGED') {
+        if (type === '__ROUTE_CHANGED__') {
           this.state = Object.assign({}, this.state, { router: data });
         } else {
           const newState = this.reduceHandler(this.state, type, data);
