@@ -1,0 +1,22 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    // search
+    "search.exclude": {
+        "node_modules": true,
+        "bower_components": true
+    },
+    // files
+    "files.exclude": {
+        "**/.DS_Store": true
+    },
+    // css
+    "css.validate": false,
+    // javaScript
+    "javascript.validate.enable": false,
+    // eslint
+    "eslint.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "html"
+    ]
+}
