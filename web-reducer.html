@@ -38,22 +38,22 @@
       }
 
       changeStateEvent(event) {
-        if (typeof this.reduceHandler === 'function') {
-          const detail = event.detail;
-          const type = detail.type;
-          const data = detail.data;
-          if (type === '__ROUTE_CHANGED') {
-            this.state = Object.assign({}, this.state, { router: data });
-          } else {
-            this.state = this.reduceHandler(this.state, type, data);
-          }
-          const customEvent = new CustomEvent('state-changed', { detail: { state: this.state } });
-          window.dispatchEvent(customEvent);
+        const detail = event.detail;
+        const type = detail.type;
+        const data = detail.data;
+        if (type === '__ROUTE_CHANGED') {
+          this.state = Object.assign({}, this.state, { router: data });
         } else {
-          console.error('Must implement reduce handler function!');
+          const newState = this.reduceHandler(this.state, type, data);
+          this.state = Object.assign({}, this.state, newState);
         }
+        const customEvent = new CustomEvent('state-changed', { detail: { state: this.state } });
+        window.dispatchEvent(customEvent);
       }
 
+      reduceHandler() {
+        console.error('A class that implement WebReducer must override reduceHandler function!');
+      }
     };
   };
 

@@ -65,10 +65,10 @@
       }
 
       reduceHandler(state, type, data) {
-        return Object.assign({}, state, {
+        return {
           todos: this.todosReducer(state.todos, type, data),
           random: this.randomReducer(state.random, type, data),
-        });
+        };
       }
 
       todosReducer(state, type, data) {

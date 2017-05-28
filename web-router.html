@@ -150,7 +150,7 @@
         const url = new URL(pathname, `${window.location.protocol}${window.location.host}`);
         const event = new CustomEvent('change-state', {
           detail: {
-            type: '__ROUTE_CHANGED',
+            type: '__ROUTE_CHANGED__',
             data: { pathname, pathnames, hash, queryString, queryObject, url },
           },
         });
