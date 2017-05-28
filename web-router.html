@@ -127,8 +127,8 @@
             this.removeVisibleAttribute(this.currentChild);
             this.dispatchRouteChangeEvent();
             this.addVisibleAttribute(child);
+            this.lazyLoad(child);
             this.currentChild = child;
-            this.lazyLoad(this.currentChild);
           });
         }
       }
