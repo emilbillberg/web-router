@@ -1,6 +1,6 @@
 {
   "name": "web-router",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A simple and opinionated client side router built with web components",
   "main": "web-router.html",
   "directories": {
