@@ -20,5 +20,5 @@
 ### Security
 * nothing
 
-## v0.1.0 - XXXX-MM-DD
+## v0.1.0 - 2017-05-27
 Initial release! 🎉🎉
