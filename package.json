@@ -1,0 +1,31 @@
+{
+  "name": "web-router",
+  "version": "0.0.0",
+  "description": "A simple and opinionated client side router built with web components",
+  "main": "web-router.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "polymer serve --port=8080",
+    "test": "polymer test --local=chrome"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilbillberg/web-router.git"
+  },
+  "keywords": [
+    "router",
+    "web",
+    "components"
+  ],
+  "author": "Emil Billberg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emilbillberg/web-router/issues"
+  },
+  "homepage": "https://github.com/emilbillberg/web-router#readme",
+  "devDependencies": {
+    "polymer-cli": "^1.1.0"
+  }
+}
