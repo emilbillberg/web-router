@@ -9,27 +9,21 @@
           state: {
             type: Object,
           },
-          visible: {
-            type: Boolean,
-            observer: 'observerVisible',
-          },
         };
       }
 
-      constructor() {
-        super();
+      connectedCallback() {
+        super.connectedCallback();
         this.stateChangeListener = this.stateChange.bind(this);
+        const event = new CustomEvent('get-state', { detail: {} });
+        window.dispatchEvent(event);
+        this.stateChange(event);
+        window.addEventListener('state-changed', this.stateChangeListener, false);
       }
 
-      observerVisible(visible) {
-        if (visible) {
-          const event = new CustomEvent('get-state', { detail: {} });
-          window.dispatchEvent(event);
-          this.stateChange(event);
-          window.addEventListener('state-changed', this.stateChangeListener, false);
-        } else {
-          window.removeEventListener('state-changed', this.stateChangeListener, false);
-        }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('state-changed', this.stateChangeListener, false);
       }
 
       stateChange(event) {

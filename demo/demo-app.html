@@ -1,6 +1,10 @@
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../web-router.html">
 <link rel="import" href="../web-reducer.html">
+<!--
+<link rel="import" href="demo-random.html">
+<link rel="import" href="demo-state.html">
+<link rel="import" href="demo-todos.html">-->
 
 <dom-module id="demo-app">
 
@@ -33,14 +37,14 @@
 
     <header>
       <a href="/components/web-router/demo/">Todos</a>
-      <a href="/components/web-router/demo/random/">Random</a>
+      <a href="/components/web-router/demo/randoms/">Random</a>
       <a href="/components/web-router/demo/state/">State</a>
     </header>
 
     <web-router>
-      <demo-todos pattern="^/components/web-router/demo/$" import="demo/demo-todos.html"></demo-todos>
-      <demo-random pattern="^/components/web-router/demo/random/$" import="demo/demo-random.html"></demo-random>
-      <demo-state pattern="^/components/web-router/demo/state/$" import="demo/demo-state.html"></demo-state>
+      <div pattern="^/components/web-router/demo/$" import="demo/demo-todos.html" name="demo-todos"></div>
+      <div pattern="^/components/web-router/demo/random/$" import="demo/demo-random.html" name="demo-random"></div>
+      <div pattern="^/components/web-router/demo/state/$" import="demo/demo-state.html" name="demo-state"></div>
     </web-router>
 
   </template>

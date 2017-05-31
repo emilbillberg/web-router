@@ -47,6 +47,9 @@
     <form on-submit="submitHandler">
       <input id="text" type="text" maxlength="50" placeholder="Add todo..." autocomplete="off">
     </form>
+    <!--<web-router>
+      <div pattern="^/components/web-router/demo/$" import="demo/demo-state.html" name="demo-state"></div>
+    </web-router>-->
     <dom-repeat items="[[state.todos]]" as="item">
       <template>
         <div class="todo-item">

@@ -47,7 +47,8 @@
           const newState = this.reduceHandler(this.state, type, data);
           this.state = Object.assign({}, this.state, newState);
         }
-        const customEvent = new CustomEvent('state-changed', { detail: { state: this.state } });
+        const customEventDetail = { detail: { state: this.state } };
+        const customEvent = new CustomEvent('state-changed', customEventDetail);
         window.dispatchEvent(customEvent);
       }
 

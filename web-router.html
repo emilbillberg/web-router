@@ -4,17 +4,8 @@
 <dom-module id="web-router">
 
   <template>
-
-    <style>
-
-      :host > ::slotted(:not([visible])) {
-        display: none !important;
-      }
-
-    </style>
-
+    <style></style>
     <slot></slot>
-
   </template>
 
   <script>
@@ -70,8 +61,8 @@
         }
 
         if ((anchor.target === `_blank`) ||
-          (anchor.target === `_top`) ||
-          (anchor.target === `_parent`)) {
+            (anchor.target === `_top`) ||
+            (anchor.target === `_parent`)) {
           return;
         }
 
@@ -124,11 +115,42 @@
           //     console.log('animation complete');
           // });
           requestAnimationFrame(() => {
-            this.removeVisibleAttribute(this.currentChild);
+            // *****************************
+            // const t0 = performance.now();
+            // this.removeVisibleAttribute(this.currentChild);
+            // this.dispatchRouteChangeEvent();
+            // this.addVisibleAttribute(child);
+            // const t1 = performance.now();
+            // this.currentChild = child;
+            // console.log(`Create: ${t1 - t0} ms`);
+            // this.lazyLoad(child);
+            // *****************************
+
+            if (this.currentChild) {
+              if (child) {
+                const name = child.getAttribute('name');
+                if (this.currentChild.localName.toLowerCase() !== name.toLowerCase()) {
+                  this.removeChild(this.currentChild);
+                  this.currentChild = null;
+                }
+              } else {
+                this.removeChild(this.currentChild);
+                this.currentChild = null;
+              }
+            }
+
             this.dispatchRouteChangeEvent();
-            this.addVisibleAttribute(child);
-            this.lazyLoad(child);
-            this.currentChild = child;
+
+            if (child) {
+              const name = child.getAttribute('name');
+              // const t0 = performance.now();
+              const createdChild = document.createElement(name);
+              this.appendChild(createdChild);
+              this.currentChild = createdChild;
+              // const t1 = performance.now();
+              // console.log(`Create: ${t1 - t0} ms`);
+              this.lazyLoad(child);
+            }
           });
         }
       }
@@ -174,11 +196,9 @@
       // }
 
       lazyLoad(child) {
-        if (child) {
-          const importHref = child.getAttribute('import');
-          if (importHref) {
-            Polymer.importHref(this.resolveUrl(importHref), null, null, true);
-          }
+        const importHref = child.getAttribute('import');
+        if (importHref) {
+          Polymer.importHref(this.resolveUrl(importHref), null, null, true);
         }
       }
 
@@ -194,17 +214,17 @@
         return null;
       }
 
-      addVisibleAttribute(child) {
-        if (child) {
-          child.setAttribute('visible', '');
-        }
-      }
+      // addVisibleAttribute(child) {
+      //   if (child) {
+      //     child.setAttribute('visible', '');
+      //   }
+      // }
 
-      removeVisibleAttribute(child) {
-        if (child) {
-          child.removeAttribute('visible');
-        }
-      }
+      // removeVisibleAttribute(child) {
+      //   if (child) {
+      //     child.removeAttribute('visible');
+      //   }
+      // }
 
       queryStringToObject(queryString) {
         let queryObject = {};
