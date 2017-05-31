@@ -6,8 +6,7 @@
     "bower_components",
     "demo",
     "test",
-    ".editorconfig",
-    ".eslintrc",
+    ".*",
     "index.html",
     "polymer.json"
   ],

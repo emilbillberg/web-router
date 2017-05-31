@@ -1,6 +1,5 @@
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../web-router.html">
-<link rel="import" href="../web-reducer.html">
 <!--
 <link rel="import" href="demo-random.html">
 <link rel="import" href="demo-state.html">
@@ -51,20 +50,30 @@
 
   <script>
 
-    class DemoApp extends WebReducer(Polymer.Element) {
+    class DemoApp extends Polymer.Element {
 
       static get is() {
         return 'demo-app';
       }
 
-      constructor() {
-        super();
-        this.setInitialState({
+      connectedCallback() {
+        super.connectedCallback();
+        const web = this.shadowRoot.querySelector('web-router');
+        web.setInitialState({
           todos: [
             { text: 'Buy groceries', completed: true },
             { text: 'Buy a car', completed: false },
           ],
           random: Math.random(),
+        });
+        this.addEventListener('state-reducer', (event) => {
+          const state = event.detail.state;
+          const type = event.detail.type;
+          const data = event.detail.data;
+          event.detail.state = Object.assign({}, state, {
+            todos: this.todosReducer(state.todos, type, data),
+            random: this.randomReducer(state.random, type, data),
+          });
         });
       }
 
