@@ -37,14 +37,14 @@
 
     <header>
       <a href="/components/web-router/demo/">Todos</a>
-      <a href="/components/web-router/demo/randoms/">Random</a>
+      <a href="/components/web-router/demo/random/">Random</a>
       <a href="/components/web-router/demo/state/">State</a>
     </header>
 
     <web-router>
-      <div pattern="^/components/web-router/demo/$" import="demo/demo-todos.html" name="demo-todos"></div>
-      <div pattern="^/components/web-router/demo/random/$" import="demo/demo-random.html" name="demo-random"></div>
-      <div pattern="^/components/web-router/demo/state/$" import="demo/demo-state.html" name="demo-state"></div>
+      <div pattern="^/components/web-router/demo/$" import="/components/web-router/demo/demo-todos.html" name="demo-todos"></div>
+      <div pattern="^/components/web-router/demo/random/$" import="/components/web-router/demo/demo-random.html" name="demo-random"></div>
+      <div pattern="^/components/web-router/demo/state/$" import="/components/web-router/demo/demo-state.html" name="demo-state"></div>
     </web-router>
 
   </template>
